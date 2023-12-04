@@ -98,6 +98,6 @@ def problem_2():
 
 
 def run():
-    print("Day 1")
+    print("Day 3")
     problem_1()
     problem_2()
