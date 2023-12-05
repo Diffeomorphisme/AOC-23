@@ -56,18 +56,12 @@ def problem_1():
 
 def problem_2():
     file_contents = read_file()
-    total = 0
     seeds = []
     current_map_key = headings[0]
     for line in file_contents.splitlines():
         if "seeds" in line:
             seeds = [int(seed) for seed in
                      re.findall(r"[0-9]+", line.split("seeds")[-1])]
-            # new_seeds = []
-            # for index, seed in enumerate(seeds):
-            #     if index % 2 == 0:
-            #         new_seeds.extend([seed + i for i in range(seeds[index + 1])])
-            # seeds = new_seeds
             continue
         for key, value in maps.items():
             if key in line:
@@ -76,16 +70,26 @@ def problem_2():
         numbers = [int(seed) for seed in re.findall(r"[0-9]+", line)]
         if numbers:
             maps[current_map_key].append(numbers)
-    for index, seed in enumerate(seeds):
-        if index % 2 == 0:
-            print(seed)
-            for new_seed in set([seed + i for i in range(seeds[index + 1])]):
-                for heading in headings:
-                    for _range in maps[heading]:
-                        if _range[1] <= seed < _range[1] + _range[2]:
-                            seed = seed - _range[1] + _range[0]
-                            break
-                total = min(total, seed) if total != 0 else seed
+
+    i = 130000000
+    min_found = False
+    while True:
+
+        seed = i
+        for heading in headings[::-1]:
+            for _range in maps[heading]:
+                if _range[0] <= seed < _range[0] + _range[2]:
+                    seed = seed - _range[0] + _range[1]
+                    break
+        for index, start_seed in enumerate(seeds):
+            if index % 2 == 0:
+                if start_seed <= seed <= start_seed + seeds[index + 1]:
+                    min_found = True
+                    break
+        if min_found:
+            break
+        i += 1
+    total = i
     print(f"Problem 2 result: {total}")
 
 
