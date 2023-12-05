@@ -1,5 +1,6 @@
 import re
 
+
 def read_file():
     with open("day4/source.txt", "r") as file:
         return file.read()
