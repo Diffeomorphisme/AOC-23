@@ -1,7 +1,6 @@
 def read_file():
     with open("template_day/source.txt", "r") as file:
-        for line in file:
-            print(line.strip())
+        return file.read()
 
 
 def problem_1():
