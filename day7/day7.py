@@ -73,49 +73,49 @@ def problem_2():
         bids.append(int(bid))
         counts = [hand.count(card) for card in hand if card != "J"]
         max_card_count = max(counts) if counts else 0
+        min_card_count = min(counts) if counts else 0
         score = 0
         J_count = hand.count("J")
-        if J_count == 5:
-            score = 25
-        elif J_count == 4:
+        if J_count == 5 or J_count == 4:
             score = 25
         elif J_count == 3:
             for card in hand:
-                if card != "J":
-                    if hand.count(card) > 1:
-                        score = 25
-                        break
-                    else:
-                        score = 17
-                        break
+                if hand.count(card) == 2:
+                    score = 25
+                    break
+                elif hand.count(card) == 1:
+                    score = 17
+                    break
         elif J_count == 2:
             for card in hand:
-                if card != "J":
-                    if hand.count(card) == 3:
-                        score = 25
-                        break
-                    elif hand.count(card) == 2:
-                        score = 17
-                    else:
-                        if cards.count(card) == max_card_count:
-                            score = 11
-                            break
-        elif J_count == 1:
-            for index, card in enumerate(hand):
-                if card != "J":
-                    if hand.count(card) == 4:
-                        score = 25
-                        break
-                    elif hand.count(card) == 3:
-                        score = 17
-                        break
-                    elif hand.count(card) == 2:
+                if hand.count(card) == 3:
+                    score = 25
+                    break
+                elif hand.count(card) == 2 and card != "J":
+                    score = 17
+                    break
+                elif hand.count(card) == 1:
+                    if cards.count(card) == max_card_count:
                         score = 11
                         break
+        elif J_count == 1:
+            for index, card in enumerate(hand):
+                if hand.count(card) == 4:
+                    score = 25
+                    break
+                elif hand.count(card) == 3:
+                    score = 17
+                    break
+                elif hand.count(card) == 2:
+                    if hand.count(card) == min_card_count:
+                        score = 13
                     else:
-                        if cards.count(card) == max_card_count:
-                            score = 7
-                            break
+                        score = 11
+                    break
+                elif card != "J":
+                    if cards.count(card) == max_card_count:
+                        score = 7
+                        break
         else:
             for card in hand:
                 score += hand.count(card)
