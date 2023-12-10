@@ -1,3 +1,6 @@
+from copy import deepcopy
+
+
 def read_file():
     with open("day10/source.txt", "r") as file:
         return file.read()
@@ -39,76 +42,56 @@ def problem_1():
         starting_branches.append(above_start)
     if matrix[under_start[0]][under_start[1]] in down:
         starting_branches.append(under_start)
-    print(start)
-    print(starting_branches)
 
-    next_point = starting_branches
-    histories = [[start], [start]]
+    starting_branch = starting_branches[0]
+    next_point = starting_branch
+    history = [start]
     i = 1
     while True:
-        for index, branch in enumerate(starting_branches):
-            current_point = next_point[index]
-            (above, under, left, right) = get_surroundings(current_point, len_matrix, row_length)
-            history = histories[index]
-            point = matrix[current_point[0]][current_point[1]]
-            if point == "-":
-                if left not in history:
-                    next_point[index] = left
-                    histories[index].append(current_point)
-                    continue
-                if right not in history:
-                    next_point[index] = right
-                    histories[index].append(current_point)
-                    continue
-            elif point == "|":
-                if above not in history:
-                    next_point[index] = above
-                    histories[index].append(current_point)
-                    continue
-                if under not in history:
-                    next_point[index] = under
-                    histories[index].append(current_point)
-                    continue
-            elif point == "7":
-                if left not in history:
-                    next_point[index] = left
-                    histories[index].append(current_point)
-                    continue
-                if under not in history:
-                    next_point[index] = under
-                    histories[index].append(current_point)
-                    continue
-            elif point == "J":
-                if above not in history:
-                    next_point[index] = above
-                    histories[index].append(current_point)
-                    continue
-                if left not in history:
-                    next_point[index] = left
-                    histories[index].append(current_point)
-                    continue
-            elif point == "L":
-                if above not in history:
-                    next_point[index] = above
-                    histories[index].append(current_point)
-                    continue
-                if right not in history:
-                    next_point[index] = right
-                    histories[index].append(current_point)
-                    continue
-            elif point == "F":
-                if under not in history:
-                    next_point[index] = under
-                    histories[index].append(current_point)
-                    continue
-                if right not in history:
-                    next_point[index] = right
-                    histories[index].append(current_point)
-                    continue
+        current_point = next_point
+        (above, under, left, right) = get_surroundings(current_point, len_matrix, row_length)
+        point = matrix[current_point[0]][current_point[1]]
+        if point == "-":
+            if left not in history:
+                next_point = left
+            if right not in history:
+                next_point = right
+            history.append(current_point)
+        elif point == "|":
+            if above not in history:
+                next_point = above
+            if under not in history:
+                next_point = under
+            history.append(current_point)
+        elif point == "7":
+            if left not in history:
+                next_point = left
+            if under not in history:
+                next_point = under
+            history.append(current_point)
+        elif point == "J":
+            if above not in history:
+                next_point = above
+            if left not in history:
+                next_point = left
+            history.append(current_point)
+        elif point == "L":
+            if above not in history:
+                next_point = above
+            if right not in history:
+                next_point = right
+            history.append(current_point)
+        elif point == "F":
+            if under not in history:
+                next_point = under
+            if right not in history:
+                next_point = right
+            history.append(current_point)
         i += 1
-        if next_point[0] == next_point[1]:
+        if next_point == starting_branches[1]:
+            i += 1
             break
-    total = i
+    total = i // 2
     print(f"Problem 1 result: {total}")
 
 
@@ -140,87 +123,106 @@ def problem_2():
         starting_branches.append(above_start)
     if matrix[under_start[0]][under_start[1]] in down:
         starting_branches.append(under_start)
-    print(start)
-    print(starting_branches)
 
-    next_point = starting_branches
-    histories = [[start], [start]]
+    starting_branch = starting_branches[0]
+    next_point = starting_branch
+    history = [start]
     i = 1
     while True:
-        for index, branch in enumerate(starting_branches):
-            current_point = next_point[index]
-            (above, under, left, right) = get_surroundings(current_point, len_matrix, row_length)
-            history = histories[index]
-            point = matrix[current_point[0]][current_point[1]]
-            if point == "-":
-                if left not in history:
-                    next_point[index] = left
-                    histories[index].append(current_point)
-                    continue
-                if right not in history:
-                    next_point[index] = right
-                    histories[index].append(current_point)
-                    continue
-            elif point == "|":
-                if above not in history:
-                    next_point[index] = above
-                    histories[index].append(current_point)
-                    continue
-                if under not in history:
-                    next_point[index] = under
-                    histories[index].append(current_point)
-                    continue
-            elif point == "7":
-                if left not in history:
-                    next_point[index] = left
-                    histories[index].append(current_point)
-                    continue
-                if under not in history:
-                    next_point[index] = under
-                    histories[index].append(current_point)
-                    continue
-            elif point == "J":
-                if above not in history:
-                    next_point[index] = above
-                    histories[index].append(current_point)
-                    continue
-                if left not in history:
-                    next_point[index] = left
-                    histories[index].append(current_point)
-                    continue
-            elif point == "L":
-                if above not in history:
-                    next_point[index] = above
-                    histories[index].append(current_point)
-                    continue
-                if right not in history:
-                    next_point[index] = right
-                    histories[index].append(current_point)
-                    continue
-            elif point == "F":
-                if under not in history:
-                    next_point[index] = under
-                    histories[index].append(current_point)
-                    continue
-                if right not in history:
-                    next_point[index] = right
-                    histories[index].append(current_point)
-                    continue
+        current_point = next_point
+        (above, under, left, right) = get_surroundings(current_point, len_matrix, row_length)
+        point = matrix[current_point[0]][current_point[1]]
+        if point == "-":
+            if left not in history:
+                next_point = left
+            if right not in history:
+                next_point = right
+            history.append(current_point)
+        elif point == "|":
+            if above not in history:
+                next_point = above
+            if under not in history:
+                next_point = under
+            history.append(current_point)
+        elif point == "7":
+            if left not in history:
+                next_point = left
+            if under not in history:
+                next_point = under
+            history.append(current_point)
+        elif point == "J":
+            if above not in history:
+                next_point = above
+            if left not in history:
+                next_point = left
+            history.append(current_point)
+        elif point == "L":
+            if above not in history:
+                next_point = above
+            if right not in history:
+                next_point = right
+            history.append(current_point)
+        elif point == "F":
+            if under not in history:
+                next_point = under
+            if right not in history:
+                next_point = right
+            history.append(current_point)
         i += 1
-        if next_point[0] == next_point[1]:
+        if next_point == starting_branches[1]:
+            i += 1
+            history.append(next_point)
             break
 
-    network = []
-    for hist in histories:
-        for i in range(len(hist)):
-            network.append(hist[i])
-    candidates = [[x, y] for y in range(row_length) for x in range(len_matrix) if [x, y] not in network]
-    outside = []
-    print(candidates)
-    new_candidates = []
-    
+    network = history
+    print(network)
+    max_column = 0
+    max_seven = [0, 0]
+    index_seven = 0
+    for index, step in enumerate(network):
+        if matrix[step[0]][step[1]] == "7":
+            max_column = max(max_column, step[1])
+            if step[1] == max_column:
+                max_seven = step
+                index_seven = index
+    if network[index_seven + 1][1] != max_seven[1]:
+        network = network[::-1]
 
-    total = 0
+    candidates = []
+    for x in range(len_matrix):
+        for y in range(row_length):
+            if [x, y] not in network:
+                candidates.append([x, y])
+    new_candidates = []
+    for index, step in enumerate(network):
+        if index == 0:
+            continue
+        print(step)
+        going_up = network[index - 1][0] - step[0]
+        going_right = step[1] - network[index - 1][1]
+        forbidden_zone = []
+        print(going_up, going_right)
+        if going_up > 0:
+            print("up")
+            forbidden_zone.extend([[step[0], y] for y in range(step[1])])
+        elif going_up < 0:
+            print("down")
+            forbidden_zone.extend([[step[0], y] for y in range(step[1] + 1, row_length)])
+        if going_right > 0:
+            print("right")
+            forbidden_zone.extend([[x, step[1]] for x in range(step[0])])
+        elif going_right < 0:
+            print("left")
+            forbidden_zone.extend([[x, step[1]] for x in range(step[0] + 1, len_matrix)])
+        print(forbidden_zone)
+
+        for candidate in candidates:
+            if candidate not in forbidden_zone:
+                new_candidates.append(candidate)
+        candidates = deepcopy(new_candidates)
+        print(candidates)
+
+    total = len(candidates)
     print(f"Problem 2 result: {total}")
 
 
