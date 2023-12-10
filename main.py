@@ -6,7 +6,8 @@
 # from day5 import day5
 # from day6 import day6
 # from day7 import day7
-from day8 import day8
+# from day8 import day8
+from day9 import day9
 
 if __name__ == "__main__":
-    day8.run()
+    day9.run()
