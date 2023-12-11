@@ -175,7 +175,6 @@ def problem_2():
             break
 
     network = history
-    print(network)
     max_column = 0
     max_seven = [0, 0]
     index_seven = 0
@@ -187,42 +186,58 @@ def problem_2():
                 index_seven = index
     if network[index_seven + 1][1] != max_seven[1]:
         network = network[::-1]
-
+    network.insert(0, start)
     candidates = []
     for x in range(len_matrix):
         for y in range(row_length):
             if [x, y] not in network:
                 candidates.append([x, y])
-    new_candidates = []
+
     for index, step in enumerate(network):
+        new_candidates = []
         if index == 0:
             continue
-        print(step)
-        going_up = network[index - 1][0] - step[0]
-        going_right = step[1] - network[index - 1][1]
+        old_step = network[index - 1]
+        going_up = old_step[0] - step[0]
+        going_right = step[1] - old_step[1]
         forbidden_zone = []
-        print(going_up, going_right)
         if going_up > 0:
-            print("up")
-            forbidden_zone.extend([[step[0], y] for y in range(step[1])])
+            _range = []
+            for y in range(step[1]):
+                if [step[0], y] in network:
+                    break
+                _range.append([step[0], y])
+            forbidden_zone.extend(_range)
         elif going_up < 0:
-            print("down")
-            forbidden_zone.extend([[step[0], y] for y in range(step[1] + 1, row_length)])
-        if going_right > 0:
-            print("right")
-            forbidden_zone.extend([[x, step[1]] for x in range(step[0])])
-        elif going_right < 0:
-            print("left")
-            forbidden_zone.extend([[x, step[1]] for x in range(step[0] + 1, len_matrix)])
-        print(forbidden_zone)
+            _range = []
+            for y in range(step[1] + 1, row_length):
+                if [step[0], y] in network:
+                    break
+                _range.append([step[0], y])
+                _range.append([old_step[0], y])
 
+            forbidden_zone.extend(_range)
+        if going_right > 0:
+            _range = []
+            for x in range(step[0]):
+                if [x, step[1]] in network:
+                    break
+                _range.append([x, step[1]])
+            forbidden_zone.extend(_range)
+        elif going_right < 0:
+            _range = []
+            for x in range(step[0] + 1, len_matrix):
+                if [x, step[1]] in network:
+                    break
+                _range.append([x, step[1]])
+            forbidden_zone.extend(_range)
         for candidate in candidates:
             if candidate not in forbidden_zone:
                 new_candidates.append(candidate)
         candidates = deepcopy(new_candidates)
-        print(candidates)
 
     total = len(candidates)
+    print(candidates)
     print(f"Problem 2 result: {total}")
 
 
