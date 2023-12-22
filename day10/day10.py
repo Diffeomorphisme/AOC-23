@@ -114,15 +114,36 @@ def problem_2():
             row_length = len(row)
     len_matrix = len(matrix)
 
+    _up = False
+    _down = False
+    _left = False
+    _right = False
     above_start, under_start, left_of_start, right_of_start = get_surroundings(start, len_matrix, row_length)
     if matrix[left_of_start[0]][left_of_start[1]] in to_the_left:
         starting_branches.append(left_of_start)
+        _left = True
     if matrix[right_of_start[0]][right_of_start[1]] in to_the_right:
         starting_branches.append(right_of_start)
+        _right = True
     if matrix[above_start[0]][above_start[1]] in up:
         starting_branches.append(above_start)
+        _up = True
     if matrix[under_start[0]][under_start[1]] in down:
         starting_branches.append(under_start)
+        _down = True
+
+    if _left and _right:
+        matrix[start[0]][start[1]] = "-"
+    if _left and _up:
+        matrix[start[0]][start[1]] = "J"
+    if _left and _down:
+        matrix[start[0]][start[1]] = "7"
+    if _up and _down:
+        matrix[start[0]][start[1]] = "|"
+    if _up and _right:
+        matrix[start[0]][start[1]] = "L"
+    if _down and _right:
+        matrix[start[0]][start[1]] = "F"
 
     starting_branch = starting_branches[0]
     next_point = starting_branch
@@ -175,69 +196,33 @@ def problem_2():
             break
 
     network = history
-    max_column = 0
-    max_seven = [0, 0]
-    index_seven = 0
-    for index, step in enumerate(network):
-        if matrix[step[0]][step[1]] == "7":
-            max_column = max(max_column, step[1])
-            if step[1] == max_column:
-                max_seven = step
-                index_seven = index
-    if network[index_seven + 1][1] != max_seven[1]:
-        network = network[::-1]
-    network.insert(0, start)
-    candidates = []
-    for x in range(len_matrix):
-        for y in range(row_length):
-            if [x, y] not in network:
-                candidates.append([x, y])
 
-    for index, step in enumerate(network):
-        new_candidates = []
-        if index == 0:
-            continue
-        old_step = network[index - 1]
-        going_up = old_step[0] - step[0]
-        going_right = step[1] - old_step[1]
-        forbidden_zone = []
-        if going_up > 0:
-            _range = []
-            for y in range(step[1]):
-                if [step[0], y] in network:
-                    break
-                _range.append([step[0], y])
-            forbidden_zone.extend(_range)
-        elif going_up < 0:
-            _range = []
-            for y in range(step[1] + 1, row_length):
-                if [step[0], y] in network:
-                    break
-                _range.append([step[0], y])
-                _range.append([old_step[0], y])
+    pairs = [["L", "J"], ["F", "7"]]
+    total = 0
+    for row_index, row in enumerate(matrix):
+        outside = True
+        ongoing_pair = []
+        for column_index, column in enumerate(row):
+            if [row_index, column_index] in network:
+                on_network = True
+            else:
+                on_network = False
 
-            forbidden_zone.extend(_range)
-        if going_right > 0:
-            _range = []
-            for x in range(step[0]):
-                if [x, step[1]] in network:
-                    break
-                _range.append([x, step[1]])
-            forbidden_zone.extend(_range)
-        elif going_right < 0:
-            _range = []
-            for x in range(step[0] + 1, len_matrix):
-                if [x, step[1]] in network:
-                    break
-                _range.append([x, step[1]])
-            forbidden_zone.extend(_range)
-        for candidate in candidates:
-            if candidate not in forbidden_zone:
-                new_candidates.append(candidate)
-        candidates = deepcopy(new_candidates)
+            if matrix[row_index][column_index] == "|" and on_network:
+                outside = False if outside else True
 
-    total = len(candidates)
-    print(candidates)
+            if ongoing_pair:
+                if matrix[row_index][column_index] in ongoing_pair and on_network:
+                    outside = False if outside else True
+            else:
+                for pair in pairs:
+                    if matrix[row_index][column_index] in pair and on_network:
+                        ongoing_pair = pair
+                        outside = False if outside else True
+                        break
+
+            if not outside and not on_network:
+                total += 1
     print(f"Problem 2 result: {total}")
 
 
